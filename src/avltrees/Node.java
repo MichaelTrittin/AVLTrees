@@ -7,27 +7,38 @@ public class Node<T extends Comparable<T>>
 
 	protected Node<T> left;
 	protected Node<T> right;
-	protected Node<T> parent;
 
-	public Node(T element)
+	protected int height = 0;
+
+	protected BalanceEnum balance = BalanceEnum.EQUAL;
+
+	public Node(T element) throws NullPointerException
 	{
+		if (element == null) {
+			throw new NullPointerException("Cannot insert null elements into the tree");
+		}
 		this.element = element;
 	}
 
-	public Node(T element, Node<T> parent)
+	public BalanceEnum addBalance(BalanceEnum balance) throws BalanceException
 	{
-		this(element);
-		this.parent = parent;
+		this.balance = this.balance.addBalance(balance);
+		return this.balance;
+	}
+
+	public BalanceEnum getBalance()
+	{
+		return this.balance;
+	}
+
+	public int getHeight()
+	{
+		return this.height;
 	}
 
 	public Node<T> getLeft()
 	{
 		return this.left;
-	}
-
-	public Node<T> getParent()
-	{
-		return this.parent;
 	}
 
 	public Node<T> getRight()
@@ -40,21 +51,16 @@ public class Node<T extends Comparable<T>>
 		return this.left != null && this.right != null;
 	}
 
-	public Node<T> setLeft(Node<T> left)
+	public void resetHeight()
 	{
-		this.left = left;
-		return left;
-	}
-
-	public Node<T> setParent(Node<T> parent)
-	{
-		this.parent = parent;
-		return parent;
-	}
-
-	public Node<T> setRight(Node<T> right)
-	{
-		this.right = right;
-		return right;
+		if (this.left != null && this.right != null) {
+			this.height = this.left.height > this.right.height ? this.left.height + 1 : this.right.height + 1;
+		} else if (this.left != null) {
+			this.height = this.left.height + 1;
+		} else if (this.right != null) {
+			this.height = this.right.height + 1;
+		} else {
+			this.height = 0;
+		}
 	}
 }
